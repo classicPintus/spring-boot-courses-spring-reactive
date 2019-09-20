@@ -1,4 +1,4 @@
-package com.wideside.reactive;
+package com.codeway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

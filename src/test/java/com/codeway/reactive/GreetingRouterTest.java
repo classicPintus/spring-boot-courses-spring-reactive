@@ -1,4 +1,4 @@
-package com.wideside.reactive;
+package com.codeway.reactive;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
