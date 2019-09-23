@@ -18,9 +18,10 @@ public class PostRestControllerImpl implements PostRestController {
     public PostRestControllerImpl(PostPersistencePort postPersistencePort,
                                   PostMapper postMapper) {
         this.postPersistencePort = postPersistencePort;
+        this.postMapper = postMapper;
     }
 
-    @GetMapping(path = "/hello/{id}")
+    @GetMapping(path = "/hello/{identifier}")
     public Mono<ResponseEntity<PostModel>> getPost(@PathVariable("identifier") String id) {
         PostModel response = postMapper.map(postPersistencePort.read(id));
         return Mono.just(new ResponseEntity<>(response, HttpStatus.OK));

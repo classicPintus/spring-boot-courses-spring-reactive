@@ -50,7 +50,7 @@ public class PostDocument {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PostDocument that = (PostDocument) o;
-        return id.equals(that.id);
+        return identifier.equals(that.identifier);
     }
 
     @Override
