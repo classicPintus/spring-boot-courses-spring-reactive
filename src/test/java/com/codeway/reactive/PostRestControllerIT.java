@@ -2,6 +2,7 @@ package com.codeway.reactive;
 
 import com.codeway.domain.Post;
 import com.codeway.domain.port.PostPersistencePort;
+import com.codeway.persistence.exception.DocumentNotFoundException;
 import com.codeway.rest.PostMapper;
 import com.codeway.rest.model.PostModel;
 import org.assertj.core.api.Assertions;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Mono;
 
 @RunWith(SpringRunner.class)
 @WebFluxTest
@@ -30,7 +32,7 @@ public class PostRestControllerIT {
     @Test
     public void shouldReturnPost() {
         Post p = new Post("123", "234", "345");
-        BDDMockito.given(postPersistencePort.read("123")).willReturn(p);
+        BDDMockito.given(postPersistencePort.read("123")).willReturn(Mono.just(p));
 
         PostModel pm = new PostModel("000", "111", "222");
         BDDMockito.given(postMapper.map(Mockito.eq(p))).willReturn(pm);
@@ -49,6 +51,21 @@ public class PostRestControllerIT {
                     Assertions.assertThat(responseBody.getContent()).isEqualTo("111");
                     Assertions.assertThat(responseBody.getDomainIdentifier()).isEqualTo("222");
                 });
+    }
+
+    @Test
+    public void shouldBeNotFoundBecauseThePostIsNotThere() {
+        Post p = new Post("123", "234", "345");
+        BDDMockito.given(postPersistencePort.read("123")).willThrow(new DocumentNotFoundException());
+
+        webTestClient
+                // Create a GET request to test an endpoint
+                .get().uri("/hello/123")
+                .accept(MediaType.APPLICATION_PROBLEM_JSON_UTF8)
+                .exchange()
+                // and use the dedicated DSL to test assertions against the response
+                .expectStatus().isNotFound()
+        ;
     }
 
 }

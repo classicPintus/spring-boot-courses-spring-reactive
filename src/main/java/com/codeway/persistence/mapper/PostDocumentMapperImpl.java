@@ -15,8 +15,7 @@ public class PostDocumentMapperImpl implements PostDocumentMapper {
     }
 
     @Override
-    public Post toPost(PostDocument postDocument)
-    {
-        return new Post(postDocument.getIdentifier(), postDocument.getOwner(),postDocument.getContent());
+    public Post toPost(PostDocument postDocument) {
+        return new Post(postDocument.getIdentifier(), postDocument.getOwner(), postDocument.getContent());
     }
 }

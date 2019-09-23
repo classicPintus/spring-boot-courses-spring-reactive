@@ -5,6 +5,7 @@ import com.codeway.domain.port.PostPersistencePort;
 import com.codeway.persistence.exception.DocumentNotFoundException;
 import com.codeway.persistence.mapper.PostDocumentMapper;
 import com.codeway.persistence.repository.PostDocumentRepository;
+import reactor.core.publisher.Mono;
 
 public class PostServiceImpl implements PostPersistencePort {
 
@@ -18,16 +19,16 @@ public class PostServiceImpl implements PostPersistencePort {
     }
 
     @Override
-    public void create(Post post) {
-        postDocumentRepository.save(this.postDocumentMapper.toPostDocument(post));
+    public Mono<Post> create(Post post) {
+        return postDocumentRepository.save(this.postDocumentMapper.toPostDocument(post))
+                .map(this.postDocumentMapper::toPost)
+                ;
     }
 
     @Override
-    public Post read(String domainIdentifier) {
-        Post result = postDocumentRepository.findByIdentifier(domainIdentifier).map(postDocumentMapper::toPost).block();
-        if (result == null) {
-            throw new DocumentNotFoundException();
-        }
-        return result;
+    public Mono<Post> read(String domainIdentifier) {
+        return postDocumentRepository.findByIdentifier(domainIdentifier)
+                .map(postDocumentMapper::toPost)
+                .switchIfEmpty(Mono.error(new DocumentNotFoundException()));
     }
 }

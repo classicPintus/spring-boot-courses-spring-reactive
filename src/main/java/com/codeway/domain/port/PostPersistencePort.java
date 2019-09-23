@@ -1,10 +1,11 @@
 package com.codeway.domain.port;
 
 import com.codeway.domain.Post;
+import reactor.core.publisher.Mono;
 
 public interface PostPersistencePort {
 
-     void create(Post post);
+     Mono<Post> create(Post post);
 
-     Post read(String domainIdentifier);
+     Mono<Post> read(String domainIdentifier);
 }
