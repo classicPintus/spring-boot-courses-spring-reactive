@@ -39,7 +39,7 @@ public class PostRestControllerIT {
 
         webTestClient
                 // Create a GET request to test an endpoint
-                .get().uri("/hello/123")
+                .get().uri("/posts/123")
                 .accept(MediaType.APPLICATION_PROBLEM_JSON_UTF8)
                 .exchange()
                 // and use the dedicated DSL to test assertions against the response
@@ -60,12 +60,32 @@ public class PostRestControllerIT {
 
         webTestClient
                 // Create a GET request to test an endpoint
-                .get().uri("/hello/123")
+                .get().uri("/posts/123")
                 .accept(MediaType.APPLICATION_PROBLEM_JSON_UTF8)
                 .exchange()
                 // and use the dedicated DSL to test assertions against the response
                 .expectStatus().isNotFound()
         ;
     }
+
+    @Test
+    public void shouldSaveNewPost() {
+        Post p = new Post("123", "234", "345");
+        BDDMockito.given(postPersistencePort.create(Mockito.any(Post.class))).willReturn(Mono.just(p));
+
+        PostModel pm = new PostModel("000", "111", "222");
+        BDDMockito.given(postMapper.map(Mockito.eq(p))).willReturn(pm);
+
+        webTestClient
+                // Create a GET request to test an endpoint
+                .post().uri("/posts")
+                .accept(MediaType.APPLICATION_PROBLEM_JSON_UTF8)
+                .exchange()
+                // and use the dedicated DSL to test assertions against the response
+                .expectStatus().isCreated();
+
+
+    }
+
 
 }

@@ -7,6 +7,10 @@ public class PostMapperRest implements PostMapper {
 
     @Override
     public PostModel map(Post post) {
-        return null;
+        return new PostModel(
+                post.getOwner(),
+                post.getContent(),
+                post.getIdentifier()
+        );
     }
 }
