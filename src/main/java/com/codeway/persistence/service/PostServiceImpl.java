@@ -21,8 +21,7 @@ public class PostServiceImpl implements PostPersistencePort {
     @Override
     public Mono<Post> create(Post post) {
         return postDocumentRepository.save(this.postDocumentMapper.toPostDocument(post))
-                .map(this.postDocumentMapper::toPost)
-                ;
+                .map(this.postDocumentMapper::toPost);
     }
 
     @Override

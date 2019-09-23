@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
-import java.security.SecureRandom;
-import java.util.Random;
-
 @RestController
 public class PostRestControllerImpl implements PostRestController {
 
@@ -30,6 +27,11 @@ public class PostRestControllerImpl implements PostRestController {
     @GetMapping(path = "/posts/{identifier}")
     public ResponseEntity<Mono<PostModel>> getPost(@PathVariable("identifier") String identifier) {
         return ResponseEntity.ok(postPersistencePort.read(identifier).map(postMapper::map));
+    }
+
+    @GetMapping(path = "/posts-without-mapping/{identifier}")
+    public ResponseEntity<Mono<Post>> getPostWithoutMapping(@PathVariable("identifier") String identifier) {
+        return ResponseEntity.ok(postPersistencePort.read(identifier));
     }
 
     @PostMapping(path = "/posts")
