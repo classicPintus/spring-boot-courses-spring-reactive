@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -19,11 +20,11 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 public class PostDocumentRepositoryIT {
 
     @Autowired
-    private PostDocumentRepository target;
+    private MongoRepository<PostDocument, String> postDocumentRepository;
 
     @Test
     public void shouldFindAllValues() {
-        int rowsNumber = target.findAll().size();
+        int rowsNumber = postDocumentRepository.findAll().size();
         Assert.assertThat(rowsNumber,is(0));
     }
 
@@ -33,7 +34,7 @@ public class PostDocumentRepositoryIT {
         pd.setIdentifier("123");
         pd.setContent("234");
         pd.setOwner("345");
-        PostDocument postDocumentSaved = target.save(pd);
+        PostDocument postDocumentSaved = postDocumentRepository.save(pd);
 
         Assert.assertThat(postDocumentSaved.getId(),is(notNullValue()));
         Assert.assertThat(postDocumentSaved.getIdentifier(),is("123"));
@@ -46,7 +47,7 @@ public class PostDocumentRepositoryIT {
             pd.setIdentifier("123");
             pd.setContent("234");
             pd.setOwner("345");
-            target.save(pd);
+            postDocumentRepository.save(pd);
         }
 
         {
@@ -54,19 +55,19 @@ public class PostDocumentRepositoryIT {
             pd.setIdentifier("124");
             pd.setContent("234");
             pd.setOwner("345");
-            target.save(pd);
+            postDocumentRepository.save(pd);
         }
 
         PostDocument expectedPostDocument = new PostDocument();
         expectedPostDocument.setIdentifier("123");
 
-        List<PostDocument> postDocumentsSaved = target.findAll();
+        List<PostDocument> postDocumentsSaved = postDocumentRepository.findAll();
 
         Assert.assertThat(postDocumentsSaved.size(),is(2));
     }
 
     @After
     public void tearDown() throws Exception {
-        target.deleteAll();
+        postDocumentRepository.deleteAll();
     }
 }

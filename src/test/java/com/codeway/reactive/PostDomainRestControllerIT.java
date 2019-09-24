@@ -37,7 +37,7 @@ public class PostDomainRestControllerIT {
     @Test
     public void shouldReturnPost() throws Exception {
         PostDomain p = new PostDomain("123", "234", "345");
-        BDDMockito.given(postPersistencePort.read("123")).willReturn(p);
+        BDDMockito.given(postPersistencePort.findByIdentifier("123")).willReturn(p);
 
         PostModel pm = new PostModel("000", "111", "222");
         BDDMockito.given(postMapper.toRestObject(Mockito.eq(p))).willReturn(pm);
@@ -53,7 +53,7 @@ public class PostDomainRestControllerIT {
     @Test
     public void shouldBeNotFoundBecauseThePostIsNotThere() throws Exception {
         PostDomain p = new PostDomain("123", "234", "345");
-        BDDMockito.given(postPersistencePort.read("123")).willThrow(new DocumentNotFoundException());
+        BDDMockito.given(postPersistencePort.findByIdentifier("123")).willThrow(new DocumentNotFoundException());
 
         mvc.perform(get("/posts/123")
             .contentType(MediaType.APPLICATION_JSON))
