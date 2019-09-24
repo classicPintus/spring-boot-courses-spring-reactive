@@ -19,6 +19,8 @@ public class PostServiceImpl extends PersistenceService<PostDomain, String, Post
 
     @Override
     public PostDomain findByIdentifier(String identifier) {
-        return postDocumentMapper.toDomainObject(postDocumentRepository.findByIdentifier(identifier));
+        return postDocumentRepository.findByIdentifier(identifier)
+                .map(postDocumentMapper::toDomainObject)
+                .orElse(null);
     }
 }

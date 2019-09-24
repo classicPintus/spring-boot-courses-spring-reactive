@@ -58,7 +58,15 @@ public class PostRestControllerImpl implements PostRestController {
         RandomStringUtils.randomAlphanumeric(6),
         RandomStringUtils.randomAlphanumeric(7));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(postMapper.toRestObject(postPersistencePort.create(postDomain)));
+        PostDomain existingPost = postPersistencePort.findByIdentifier(postDomain.getIdentifier());
+        if (existingPost == null){
+            return ResponseEntity.status(HttpStatus.CREATED).body(postMapper.toRestObject(postPersistencePort.create(postDomain)));
+        }else{
+            return ResponseEntity.status(HttpStatus.CREATED).body(postMapper.toRestObject(existingPost));
+        }
+
+
+
     }
 
 }
