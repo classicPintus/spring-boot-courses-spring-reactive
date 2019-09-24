@@ -32,12 +32,12 @@ public class PostRestControllerImpl implements PostRestController {
 
     @GetMapping(path = "/posts/{identifier}")
     public ResponseEntity<Mono<PostModel>> getPost(@PathVariable("identifier") String identifier) {
-        return ResponseEntity.ok(postPersistencePort.read(identifier).map(postMapper::toRestObject));
+        return ResponseEntity.ok(postPersistencePort.findByIdentifier(identifier).map(postMapper::toRestObject));
     }
 
     @GetMapping(path = "/posts-without-rest-mapping/{identifier}")
     public ResponseEntity<Mono<PostDomain>> getPostWithoutRestMapping(@PathVariable("identifier") String identifier) {
-        return ResponseEntity.ok(postPersistencePort.read(identifier));
+        return ResponseEntity.ok(postPersistencePort.findByIdentifier(identifier));
     }
 
     @GetMapping(path = "/posts-without-mapping/{identifier}")
