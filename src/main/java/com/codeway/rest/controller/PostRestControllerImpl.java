@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 public class PostRestControllerImpl implements PostRestController {
 
@@ -43,6 +47,17 @@ public class PostRestControllerImpl implements PostRestController {
     @GetMapping(path = "/posts-without-mapping/{identifier}")
     public ResponseEntity<Mono<PostDocument>> getPostWithoutMapping(@PathVariable("identifier") String identifier) {
         return ResponseEntity.ok(postDocumentRepository.findByIdentifier(identifier));
+    }
+
+    @GetMapping(path = "/posts-only-memory")
+    public ResponseEntity<Mono<Void>> getPostOnlyMemory() {
+        Map<String, Instant> m = new HashMap<>();
+        for (int i = 0; i < 100000; i++){
+            int value = 10000 - i + i * 2;
+            String key = String.valueOf(value);
+            m.put(key, Instant.now());
+        }
+        return ResponseEntity.ok(Mono.empty());
     }
 
     @PostMapping(path = "/posts")
