@@ -3,6 +3,7 @@ package com.codeway.reactive;
 import com.codeway.domain.PostDomain;
 import com.codeway.domain.port.PostPersistencePort;
 import com.codeway.persistence.exception.DocumentNotFoundException;
+import com.codeway.persistence.repository.PostDocumentRepository;
 import com.codeway.rest.mapper.PostMapper;
 import com.codeway.rest.model.PostModel;
 import org.assertj.core.api.Assertions;
@@ -28,6 +29,8 @@ public class PostDomainRestControllerIT {
     private PostPersistencePort postPersistencePort;
     @MockBean
     private PostMapper postMapper;
+    @MockBean
+    private PostDocumentRepository postDocumentRepository;
 
     @Test
     public void shouldReturnPost() {
@@ -56,7 +59,7 @@ public class PostDomainRestControllerIT {
     @Test
     public void shouldBeNotFoundBecauseThePostIsNotThere() {
         PostDomain p = new PostDomain("123", "234", "345");
-        BDDMockito.given(postPersistencePort.read("123")).willThrow(new DocumentNotFoundException());
+        BDDMockito.given(postPersistencePort.findByIdentifier("123")).willThrow(new DocumentNotFoundException());
 
         webTestClient
                 // Create a GET request to test an endpoint
