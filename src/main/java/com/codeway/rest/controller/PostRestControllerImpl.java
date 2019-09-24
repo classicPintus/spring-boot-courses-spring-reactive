@@ -64,7 +64,7 @@ public class PostRestControllerImpl implements PostRestController {
     @PostMapping(path = "/posts")
     @Override
     public ResponseEntity<Mono<PostModel>> addPost() {
-        Mono<PostDomain> just = Mono.just(new PostDomain(
+        Mono<PostDomain> just = Mono.fromSupplier(() -> new PostDomain(
                 RandomStringUtils.randomAlphanumeric(5),
                 RandomStringUtils.randomAlphanumeric(6),
                 RandomStringUtils.randomAlphanumeric(7)));
