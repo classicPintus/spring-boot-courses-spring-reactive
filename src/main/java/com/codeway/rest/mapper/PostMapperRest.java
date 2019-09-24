@@ -8,9 +8,9 @@ public class PostMapperRest implements PostMapper {
     @Override
     public PostDomain toDomainObject(PostModel restObject) {
         return new PostDomain(
-                restObject.getDomainIdentifier(),
-                restObject.getOwner(),
-                restObject.getContent()
+                restObject.domainIdentifier,
+                restObject.owner,
+                restObject.content
         );
     }
 

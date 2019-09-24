@@ -1,14 +1,23 @@
 package com.codeway.rest.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
-@AllArgsConstructor
 public class PostModel {
-    private final String owner;
-    private final String content;
-    private final String domainIdentifier;
+    public String owner;
+    public String content;
+    public String domainIdentifier;
+
+
+    public PostModel(String owner, String content, String domainIdentifier) {
+        this.owner = owner;
+        this.content = content;
+        this.domainIdentifier = domainIdentifier;
+    }
+
+    @Override
+    public String toString() {
+        return "PostModel{" +
+            "owner='" + owner + '\'' +
+            ", content='" + content + '\'' +
+            ", domainIdentifier='" + domainIdentifier + '\'' +
+            '}';
+    }
 }

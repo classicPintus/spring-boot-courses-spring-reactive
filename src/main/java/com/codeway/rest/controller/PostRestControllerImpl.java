@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Mono;
 
 @RestController
 public class PostRestControllerImpl implements PostRestController {
@@ -26,24 +25,24 @@ public class PostRestControllerImpl implements PostRestController {
     }
 
     @GetMapping(path = "/posts/{identifier}")
-    public ResponseEntity<Mono<PostModel>> getPost(@PathVariable("identifier") String identifier) {
-        return ResponseEntity.ok(postPersistencePort.read(identifier).map(postMapper::toRestObject));
+    public ResponseEntity<PostModel> getPost(@PathVariable("identifier") String identifier) {
+        return ResponseEntity.ok(postMapper.toRestObject(postPersistencePort.read(identifier)));
     }
 
     @GetMapping(path = "/posts-without-mapping/{identifier}")
-    public ResponseEntity<Mono<PostDomain>> getPostWithoutMapping(@PathVariable("identifier") String identifier) {
+    public ResponseEntity<PostDomain> getPostWithoutMapping(@PathVariable("identifier") String identifier) {
         return ResponseEntity.ok(postPersistencePort.read(identifier));
     }
 
     @PostMapping(path = "/posts")
     @Override
-    public ResponseEntity<Mono<PostModel>> addPost() {
+    public ResponseEntity<PostModel> addPost() {
         PostDomain postDomain = new PostDomain(
-                RandomStringUtils.randomAlphanumeric(5),
-                RandomStringUtils.randomAlphanumeric(6),
-                RandomStringUtils.randomAlphanumeric(7));
+        RandomStringUtils.randomAlphanumeric(5),
+        RandomStringUtils.randomAlphanumeric(6),
+        RandomStringUtils.randomAlphanumeric(7));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(postPersistencePort.create(postDomain).map(postMapper::toRestObject));
+        return ResponseEntity.status(HttpStatus.CREATED).body(postMapper.toRestObject(postPersistencePort.create(postDomain)));
     }
 
 }
