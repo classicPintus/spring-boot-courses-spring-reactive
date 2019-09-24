@@ -2,6 +2,8 @@ package com.codeway.rest.controller;
 
 import com.codeway.domain.PostDomain;
 import com.codeway.domain.port.PostPersistencePort;
+import com.codeway.persistence.document.PostDocument;
+import com.codeway.persistence.repository.PostDocumentRepository;
 import com.codeway.rest.mapper.PostMapper;
 import com.codeway.rest.model.PostModel;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -16,13 +18,16 @@ import reactor.core.publisher.Mono;
 @RestController
 public class PostRestControllerImpl implements PostRestController {
 
-    private PostPersistencePort postPersistencePort;
-    private PostMapper postMapper;
+    private final PostPersistencePort postPersistencePort;
+    private final PostMapper postMapper;
+    private final PostDocumentRepository postDocumentRepository;
 
     public PostRestControllerImpl(PostPersistencePort postPersistencePort,
-                                  PostMapper postMapper) {
+                                  PostMapper postMapper,
+                                  PostDocumentRepository postDocumentRepository) {
         this.postPersistencePort = postPersistencePort;
         this.postMapper = postMapper;
+        this.postDocumentRepository = postDocumentRepository;
     }
 
     @GetMapping(path = "/posts/{identifier}")
@@ -30,9 +35,14 @@ public class PostRestControllerImpl implements PostRestController {
         return ResponseEntity.ok(postPersistencePort.read(identifier).map(postMapper::toRestObject));
     }
 
-    @GetMapping(path = "/posts-without-mapping/{identifier}")
-    public ResponseEntity<Mono<PostDomain>> getPostWithoutMapping(@PathVariable("identifier") String identifier) {
+    @GetMapping(path = "/posts-without-rest-mapping/{identifier}")
+    public ResponseEntity<Mono<PostDomain>> getPostWithoutRestMapping(@PathVariable("identifier") String identifier) {
         return ResponseEntity.ok(postPersistencePort.read(identifier));
+    }
+
+    @GetMapping(path = "/posts-without-mapping/{identifier}")
+    public ResponseEntity<Mono<PostDocument>> getPostWithoutMapping(@PathVariable("identifier") String identifier) {
+        return ResponseEntity.ok(postDocumentRepository.findByIdentifier(identifier));
     }
 
     @PostMapping(path = "/posts")
