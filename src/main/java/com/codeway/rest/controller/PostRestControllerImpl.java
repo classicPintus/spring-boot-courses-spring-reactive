@@ -64,12 +64,16 @@ public class PostRestControllerImpl implements PostRestController {
     @PostMapping(path = "/posts")
     @Override
     public ResponseEntity<Mono<PostModel>> addPost() {
-        Mono<PostDomain> just = Mono.fromSupplier(() -> new PostDomain(
-                RandomStringUtils.randomAlphanumeric(5),
-                RandomStringUtils.randomAlphanumeric(6),
-                RandomStringUtils.randomAlphanumeric(7)));
+        String identifier = RandomStringUtils.randomAlphanumeric(5);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(postPersistencePort.create(just).map(postMapper::toRestObject));
+        Mono<PostModel> responseBody = postPersistencePort.findByIdentifier(identifier)
+                .switchIfEmpty(postPersistencePort.create(Mono.just(new PostDomain(
+                        RandomStringUtils.randomAlphanumeric(5),
+                        RandomStringUtils.randomAlphanumeric(6),
+                        RandomStringUtils.randomAlphanumeric(7)))))
+                .map(postMapper::toRestObject);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
     }
 
 }
