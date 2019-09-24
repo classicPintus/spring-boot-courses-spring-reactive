@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 @RestController
 public class PostRestControllerImpl implements PostRestController {
@@ -42,7 +43,7 @@ public class PostRestControllerImpl implements PostRestController {
     public ResponseEntity<Void> getPostOnlyMemory() {
         Map<String, Instant> m = new HashMap<>();
         for (int i = 0; i < 100000; i++){
-            int value = 10000 - i + i * 2;
+            int value = 10000 - i + i * new Random().nextInt();
             String key = String.valueOf(value);
             m.put(key, Instant.now());
         }
