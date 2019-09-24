@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
 
 @RunWith(SpringRunner.class)
 @WebFluxTest
-public class PostDomainRestControllerIT {
+public class PostDomainRestControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
@@ -35,7 +35,7 @@ public class PostDomainRestControllerIT {
     @Test
     public void shouldReturnPost() {
         PostDomain p = new PostDomain("123", "234", "345");
-        BDDMockito.given(postPersistencePort.read("123")).willReturn(Mono.just(p));
+        BDDMockito.given(postPersistencePort.findByIdentifier("123")).willReturn(Mono.just(p));
 
         PostModel pm = new PostModel("000", "111", "222");
         BDDMockito.given(postMapper.toRestObject(Mockito.eq(p))).willReturn(pm);
@@ -58,7 +58,6 @@ public class PostDomainRestControllerIT {
 
     @Test
     public void shouldBeNotFoundBecauseThePostIsNotThere() {
-        PostDomain p = new PostDomain("123", "234", "345");
         BDDMockito.given(postPersistencePort.findByIdentifier("123")).willThrow(new DocumentNotFoundException());
 
         webTestClient
@@ -74,7 +73,7 @@ public class PostDomainRestControllerIT {
     @Test
     public void shouldSaveNewPost() {
         PostDomain p = new PostDomain("123", "234", "345");
-        BDDMockito.given(postPersistencePort.create(Mockito.any(PostDomain.class))).willReturn(Mono.just(p));
+        BDDMockito.given(postPersistencePort.create(Mockito.any(Mono.class))).willReturn(Mono.just(p));
 
         PostModel pm = new PostModel("000", "111", "222");
         BDDMockito.given(postMapper.toRestObject(Mockito.eq(p))).willReturn(pm);

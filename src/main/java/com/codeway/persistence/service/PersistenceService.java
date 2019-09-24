@@ -16,8 +16,11 @@ public abstract class PersistenceService<DOMAIN, KEY, ENTITY> implements Persist
         this.mapper = mapper;
     }
 
-    public Mono<DOMAIN> create(DOMAIN domainObject) {
-        return jpaRepository.save(mapper.toEntity(domainObject)).map(mapper::toDomainObject);
+    public Mono<DOMAIN> create(Mono<DOMAIN> domainObject) {
+        return domainObject
+                .map(mapper::toEntity)
+                .flatMap(jpaRepository::save)
+                .map(mapper::toDomainObject);
     }
 
     public Mono<DOMAIN> read(KEY key) {

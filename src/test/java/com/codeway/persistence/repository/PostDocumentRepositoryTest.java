@@ -20,7 +20,7 @@ import reactor.test.StepVerifier;
 
 @RunWith(SpringRunner.class)
 @DataMongoTest
-public class PostDocumentRepositoryIT {
+public class PostDocumentRepositoryTest {
 
     @Autowired
     private PostDocumentRepository target;
