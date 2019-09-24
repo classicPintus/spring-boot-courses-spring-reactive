@@ -1,12 +1,12 @@
 package com.codeway.domain;
 
-public class Post {
+public class PostDomain {
 
     private final String owner;
     private final String content;
     private final String identifier;
 
-    public Post(String domainIdentifier, String owner, String content) {
+    public PostDomain(String domainIdentifier, String owner, String content) {
         this.owner = owner;
         this.content = content;
         this.identifier = domainIdentifier;

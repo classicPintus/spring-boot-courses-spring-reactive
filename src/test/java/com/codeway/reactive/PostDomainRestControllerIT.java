@@ -1,9 +1,9 @@
 package com.codeway.reactive;
 
-import com.codeway.domain.Post;
+import com.codeway.domain.PostDomain;
 import com.codeway.domain.port.PostPersistencePort;
 import com.codeway.persistence.exception.DocumentNotFoundException;
-import com.codeway.rest.PostMapper;
+import com.codeway.rest.mapper.PostMapper;
 import com.codeway.rest.model.PostModel;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import reactor.core.publisher.Mono;
 
 @RunWith(SpringRunner.class)
 @WebFluxTest
-public class PostRestControllerIT {
+public class PostDomainRestControllerIT {
 
     @Autowired
     private WebTestClient webTestClient;
@@ -31,11 +31,11 @@ public class PostRestControllerIT {
 
     @Test
     public void shouldReturnPost() {
-        Post p = new Post("123", "234", "345");
+        PostDomain p = new PostDomain("123", "234", "345");
         BDDMockito.given(postPersistencePort.read("123")).willReturn(Mono.just(p));
 
         PostModel pm = new PostModel("000", "111", "222");
-        BDDMockito.given(postMapper.map(Mockito.eq(p))).willReturn(pm);
+        BDDMockito.given(postMapper.toRestObject(Mockito.eq(p))).willReturn(pm);
 
         webTestClient
                 // Create a GET request to test an endpoint
@@ -55,7 +55,7 @@ public class PostRestControllerIT {
 
     @Test
     public void shouldBeNotFoundBecauseThePostIsNotThere() {
-        Post p = new Post("123", "234", "345");
+        PostDomain p = new PostDomain("123", "234", "345");
         BDDMockito.given(postPersistencePort.read("123")).willThrow(new DocumentNotFoundException());
 
         webTestClient
@@ -70,11 +70,11 @@ public class PostRestControllerIT {
 
     @Test
     public void shouldSaveNewPost() {
-        Post p = new Post("123", "234", "345");
-        BDDMockito.given(postPersistencePort.create(Mockito.any(Post.class))).willReturn(Mono.just(p));
+        PostDomain p = new PostDomain("123", "234", "345");
+        BDDMockito.given(postPersistencePort.create(Mockito.any(PostDomain.class))).willReturn(Mono.just(p));
 
         PostModel pm = new PostModel("000", "111", "222");
-        BDDMockito.given(postMapper.map(Mockito.eq(p))).willReturn(pm);
+        BDDMockito.given(postMapper.toRestObject(Mockito.eq(p))).willReturn(pm);
 
         webTestClient
                 // Create a GET request to test an endpoint

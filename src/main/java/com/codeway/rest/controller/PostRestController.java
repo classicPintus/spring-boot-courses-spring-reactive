@@ -1,4 +1,4 @@
-package com.codeway.rest;
+package com.codeway.rest.controller;
 
 import com.codeway.rest.model.PostModel;
 import org.springframework.http.ResponseEntity;

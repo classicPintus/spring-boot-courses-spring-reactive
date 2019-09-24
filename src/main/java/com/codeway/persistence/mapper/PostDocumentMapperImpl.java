@@ -1,21 +1,21 @@
 package com.codeway.persistence.mapper;
 
-import com.codeway.domain.Post;
+import com.codeway.domain.PostDomain;
 import com.codeway.persistence.document.PostDocument;
 
 public class PostDocumentMapperImpl implements PostDocumentMapper {
 
     @Override
-    public PostDocument toPostDocument(Post post) {
+    public PostDocument toEntity(PostDomain postDomain) {
         PostDocument res = new PostDocument();
-        res.setIdentifier(post.getIdentifier());
-        res.setContent(post.getContent());
-        res.setOwner(post.getOwner());
+        res.setIdentifier(postDomain.getIdentifier());
+        res.setContent(postDomain.getContent());
+        res.setOwner(postDomain.getOwner());
         return res;
     }
 
     @Override
-    public Post toPost(PostDocument postDocument) {
-        return new Post(postDocument.getIdentifier(), postDocument.getOwner(), postDocument.getContent());
+    public PostDomain toDomainObject(PostDocument postDocument) {
+        return new PostDomain(postDocument.getIdentifier(), postDocument.getOwner(), postDocument.getContent());
     }
 }

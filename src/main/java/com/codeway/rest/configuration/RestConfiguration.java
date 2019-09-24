@@ -1,7 +1,7 @@
 package com.codeway.rest.configuration;
 
-import com.codeway.rest.PostMapper;
-import com.codeway.rest.PostMapperRest;
+import com.codeway.rest.mapper.PostMapper;
+import com.codeway.rest.mapper.PostMapperRest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

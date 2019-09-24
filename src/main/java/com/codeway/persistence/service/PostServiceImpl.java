@@ -1,33 +1,15 @@
 package com.codeway.persistence.service;
 
-import com.codeway.domain.Post;
-import com.codeway.domain.port.PostPersistencePort;
-import com.codeway.persistence.exception.DocumentNotFoundException;
+import com.codeway.domain.PostDomain;
+import com.codeway.persistence.document.PostDocument;
 import com.codeway.persistence.mapper.PostDocumentMapper;
 import com.codeway.persistence.repository.PostDocumentRepository;
-import reactor.core.publisher.Mono;
 
-public class PostServiceImpl implements PostPersistencePort {
-
-    private final PostDocumentRepository postDocumentRepository;
-    private final PostDocumentMapper postDocumentMapper;
+public class PostServiceImpl extends PersistenceService<PostDomain, String, PostDocument> implements PostService {
 
     public PostServiceImpl(PostDocumentRepository postDocumentRepository,
                            PostDocumentMapper postDocumentMapper) {
-        this.postDocumentRepository = postDocumentRepository;
-        this.postDocumentMapper = postDocumentMapper;
+        super(postDocumentRepository, postDocumentMapper);
     }
 
-    @Override
-    public Mono<Post> create(Post post) {
-        return postDocumentRepository.save(this.postDocumentMapper.toPostDocument(post))
-                .map(this.postDocumentMapper::toPost);
-    }
-
-    @Override
-    public Mono<Post> read(String domainIdentifier) {
-        return postDocumentRepository.findByIdentifier(domainIdentifier)
-                .map(postDocumentMapper::toPost)
-                .switchIfEmpty(Mono.error(new DocumentNotFoundException()));
-    }
 }

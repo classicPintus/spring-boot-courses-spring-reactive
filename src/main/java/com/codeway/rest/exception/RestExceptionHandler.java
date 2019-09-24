@@ -1,4 +1,4 @@
-package com.codeway.rest;
+package com.codeway.rest.exception;
 
 import com.codeway.persistence.exception.DocumentNotFoundException;
 import org.springframework.http.HttpStatus;

@@ -1,7 +1,8 @@
-package com.codeway.rest;
+package com.codeway.rest.controller;
 
-import com.codeway.domain.Post;
+import com.codeway.domain.PostDomain;
 import com.codeway.domain.port.PostPersistencePort;
+import com.codeway.rest.mapper.PostMapper;
 import com.codeway.rest.model.PostModel;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.http.HttpStatus;
@@ -26,25 +27,23 @@ public class PostRestControllerImpl implements PostRestController {
 
     @GetMapping(path = "/posts/{identifier}")
     public ResponseEntity<Mono<PostModel>> getPost(@PathVariable("identifier") String identifier) {
-        return ResponseEntity.ok(postPersistencePort.read(identifier).map(postMapper::map));
+        return ResponseEntity.ok(postPersistencePort.read(identifier).map(postMapper::toRestObject));
     }
 
     @GetMapping(path = "/posts-without-mapping/{identifier}")
-    public ResponseEntity<Mono<Post>> getPostWithoutMapping(@PathVariable("identifier") String identifier) {
+    public ResponseEntity<Mono<PostDomain>> getPostWithoutMapping(@PathVariable("identifier") String identifier) {
         return ResponseEntity.ok(postPersistencePort.read(identifier));
     }
 
     @PostMapping(path = "/posts")
     @Override
     public ResponseEntity<Mono<PostModel>> addPost() {
-        Post post = new Post(
+        PostDomain postDomain = new PostDomain(
                 RandomStringUtils.randomAlphanumeric(5),
                 RandomStringUtils.randomAlphanumeric(6),
-                RandomStringUtils.randomAlphanumeric(7))
-                ;
+                RandomStringUtils.randomAlphanumeric(7));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(postPersistencePort.create(post).map(postMapper::map));
-
+        return ResponseEntity.status(HttpStatus.CREATED).body(postPersistencePort.create(postDomain).map(postMapper::toRestObject));
     }
 
 }
