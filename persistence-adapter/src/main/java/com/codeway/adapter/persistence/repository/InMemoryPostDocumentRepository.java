@@ -17,7 +17,8 @@ public class InMemoryPostDocumentRepository implements PostRepository {
 
     @Override
     public Optional<PostDocument> findByIdentifier(String identifier) {
-        return Optional.of(documents.get(identifier));
+        PostDocument value = documents.get(identifier);
+        return value != null ? Optional.of(value) : Optional.empty();
     }
 
     @Override

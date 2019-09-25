@@ -18,16 +18,5 @@ public class PersistenceConfiguration {
         return new PostDocumentMapperImpl();
     }
 
-    @Bean
-    public PostPersistencePort postService(PostDocumentRepository postDocumentRepository,
-                                           PostDocumentMapper postDocumentMapper) {
-        return new PostService(postDocumentRepository, postDocumentMapper);
-    }
-
-    @Bean
-    public PostPersistencePort inMemoryPostService(PostDocumentMapper postDocumentMapper) {
-        return new PostService(new InMemoryPostDocumentRepository(), postDocumentMapper);
-    }
-
 
 }
