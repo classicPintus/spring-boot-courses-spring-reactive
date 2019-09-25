@@ -6,6 +6,7 @@ import com.codeway.adapter.persistence.mapper.PostDocumentMapper;
 import com.codeway.adapter.persistence.mapper.PostDocumentMapperImpl;
 import com.codeway.adapter.persistence.repository.InMemoryPostDocumentRepository;
 import com.codeway.adapter.persistence.service.PostService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
