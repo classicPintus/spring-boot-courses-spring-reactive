@@ -13,7 +13,7 @@
 	</modules>
     <packaging>pom</packaging>
 
-	<name>reactive</name>
+	<name>hexagonal</name>
 	<description>Demo project for Spring Boot</description>
 
 	<parent>

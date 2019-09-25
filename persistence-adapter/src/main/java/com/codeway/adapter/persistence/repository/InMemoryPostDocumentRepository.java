@@ -4,6 +4,7 @@ import com.codeway.adapter.persistence.document.PostDocument;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 2019/09/24
@@ -15,8 +16,8 @@ public class InMemoryPostDocumentRepository implements PostRepository {
     private Map<String, PostDocument> documents = new HashMap<>();
 
     @Override
-    public PostDocument findByIdentifier(String identifier) {
-        return documents.get(identifier);
+    public Optional<PostDocument> findByIdentifier(String identifier) {
+        return Optional.of(documents.get(identifier));
     }
 
     @Override

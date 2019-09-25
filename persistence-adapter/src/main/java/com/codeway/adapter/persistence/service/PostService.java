@@ -1,9 +1,13 @@
 package com.codeway.adapter.persistence.service;
 
+import com.codeway.adapter.persistence.document.PostDocument;
+import com.codeway.adapter.persistence.exception.DocumentNotFoundException;
 import com.codeway.domain.PostDomain;
 import com.codeway.domain.port.PostPersistencePort;
 import com.codeway.adapter.persistence.mapper.PostDocumentMapper;
 import com.codeway.adapter.persistence.repository.PostRepository;
+
+import java.util.Optional;
 
 public class PostService implements PostPersistencePort {
 
@@ -18,7 +22,8 @@ public class PostService implements PostPersistencePort {
 
     @Override
     public PostDomain findByIdentifier(String identifier) {
-        return postDocumentMapper.toDomainObject(postRepository.findByIdentifier(identifier));
+        PostDocument document = postRepository.findByIdentifier(identifier).orElseThrow(DocumentNotFoundException::new);
+        return postDocumentMapper.toDomainObject(document);
     }
 
     @Override
