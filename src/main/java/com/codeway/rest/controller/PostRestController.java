@@ -6,6 +6,6 @@ import reactor.core.publisher.Mono;
 
 public interface PostRestController {
 
-    ResponseEntity<Mono<PostModel>> getPost(String id);
-    ResponseEntity<Mono<PostModel>> addPost();
+    Mono<ResponseEntity<PostModel>> getPost(String id);
+    Mono<ResponseEntity<PostModel>> addPost();
 }

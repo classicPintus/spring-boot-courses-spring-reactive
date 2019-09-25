@@ -7,7 +7,6 @@ import com.codeway.persistence.repository.PostDocumentRepository;
 import com.codeway.rest.mapper.PostMapper;
 import com.codeway.rest.model.PostModel;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,40 +39,42 @@ public class PostRestControllerImpl implements PostRestController {
     }
 
     @GetMapping(path = "/posts/{identifier}")
-    public ResponseEntity<Mono<PostModel>> getPost(@PathVariable("identifier") String identifier) {
-        return ResponseEntity.ok(postPersistencePort.findByIdentifier(identifier).map(postMapper::toRestObject));
+    public Mono<ResponseEntity<PostModel>> getPost(@PathVariable("identifier") String identifier) {
+
+        return postPersistencePort.findByIdentifier(identifier)
+                .map(postMapper::toRestObject)
+                .map(ResponseEntity::ok);
     }
 
     @GetMapping(path = "/posts-without-rest-mapping/{identifier}")
-    public ResponseEntity<Mono<PostDomain>> getPostWithoutRestMapping(@PathVariable("identifier") String identifier) {
-        return ResponseEntity.ok(postPersistencePort.findByIdentifier(identifier));
+    public Mono<ResponseEntity<PostDomain>> getPostWithoutRestMapping(@PathVariable("identifier") String identifier) {
+        return postPersistencePort.findByIdentifier(identifier).map(ResponseEntity::ok);
     }
 
     @GetMapping(path = "/posts-without-mapping/{identifier}")
-    public ResponseEntity<Mono<PostDocument>> getPostWithoutMapping(@PathVariable("identifier") String identifier) {
-        return ResponseEntity.ok(postDocumentRepository.findByIdentifier(identifier));
+    public Mono<ResponseEntity<PostDocument>> getPostWithoutMapping(@PathVariable("identifier") String identifier) {
+        return postDocumentRepository.findByIdentifier(identifier).map(ResponseEntity::ok);
     }
 
     @GetMapping(path = "/posts-only-memory")
-    public ResponseEntity<Mono<Void>> getPostOnlyMemory() {
+    public Mono<ResponseEntity<Void>> getPostOnlyMemory() {
         Map<String, Instant> m = new HashMap<>();
         for (int i = 0; i < 100000; i++) {
             int value = 10000 - i + i * new Random().nextInt();
             String key = String.valueOf(value);
             m.put(key, Instant.now());
         }
-        return ResponseEntity.ok(Mono.empty());
+        return Mono.just(ResponseEntity.ok().build());
     }
 
     @GetMapping(path = "/posts-http")
-    public ResponseEntity<Mono<String>> getPostHttp() {
-        Mono<String> stringFlux = WebClient.create()
+    public Mono<ResponseEntity<String>> getPostHttp() {
+        return WebClient.create()
                 .get()
                 .uri(URI.create("http://192.168.245.157:8080/api/auth/slow"))
                 .retrieve()
-                .bodyToMono(String.class);
-
-        return ResponseEntity.ok(stringFlux);
+                .bodyToMono(String.class)
+                .map(ResponseEntity::ok);
     }
 
     @GetMapping(path = "/posts-http-blocking")
@@ -84,17 +85,17 @@ public class PostRestControllerImpl implements PostRestController {
 
     @PostMapping(path = "/posts")
     @Override
-    public ResponseEntity<Mono<PostModel>> addPost() {
+    public Mono<ResponseEntity<PostModel>> addPost() {
         String identifier = RandomStringUtils.randomAlphanumeric(5);
 
-        Mono<PostModel> responseBody = postPersistencePort.findByIdentifier(identifier)
+        return postPersistencePort.findByIdentifier(identifier)
                 .switchIfEmpty(postPersistencePort.create(Mono.just(new PostDomain(
                         RandomStringUtils.randomAlphanumeric(5),
                         RandomStringUtils.randomAlphanumeric(6),
                         RandomStringUtils.randomAlphanumeric(7)))))
-                .map(postMapper::toRestObject);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
+                .map(postMapper::toRestObject)
+                .map(x -> ResponseEntity.status(HttpStatus.CREATED).body(x))
+        ;
     }
 
 }

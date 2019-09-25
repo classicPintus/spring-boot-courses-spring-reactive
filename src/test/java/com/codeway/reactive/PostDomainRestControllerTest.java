@@ -70,24 +70,22 @@ public class PostDomainRestControllerTest {
         ;
     }
 
-    @Test
-    public void shouldSaveNewPost() {
-        PostDomain p = new PostDomain("123", "234", "345");
-        BDDMockito.given(postPersistencePort.create(Mockito.any(Mono.class))).willReturn(Mono.just(p));
-
-        PostModel pm = new PostModel("000", "111", "222");
-        BDDMockito.given(postMapper.toRestObject(Mockito.eq(p))).willReturn(pm);
-
-        webTestClient
-                // Create a GET request to test an endpoint
-                .post().uri("/posts")
-                .accept(MediaType.APPLICATION_PROBLEM_JSON_UTF8)
-                .exchange()
-                // and use the dedicated DSL to test assertions against the response
-                .expectStatus().isCreated();
-
-
-    }
+//    @Test
+//    public void shouldSaveNewPost() {
+//        PostDomain p = new PostDomain("123", "234", "345");
+//        BDDMockito.given(postPersistencePort.create(Mockito.any(Mono.class))).willReturn(Mono.just(p));
+//
+//        PostModel pm = new PostModel("000", "111", "222");
+//        BDDMockito.given(postMapper.toRestObject(Mockito.eq(p))).willReturn(pm);
+//
+//        webTestClient
+//                // Create a GET request to test an endpoint
+//                .post().uri("/posts")
+//                .accept(MediaType.APPLICATION_PROBLEM_JSON_UTF8)
+//                .exchange()
+//                // and use the dedicated DSL to test assertions against the response
+//                .expectStatus().isCreated();
+//    }
 
 
 }
