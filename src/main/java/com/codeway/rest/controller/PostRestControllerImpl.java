@@ -77,8 +77,8 @@ public class PostRestControllerImpl implements PostRestController {
     }
 
     @GetMapping(path = "/posts-http-blocking")
-    public ResponseEntity<String> getPostHttpBlocking() {
-        return ResponseEntity.ok(new RestTemplate().getForObject(URI.create("http://192.168.245.157:8080/api/auth/slow"), String.class));
+    public Mono<String> getPostHttpBlocking() {
+        return Mono.fromSupplier(() -> new RestTemplate().getForObject(URI.create("http://192.168.245.157:8080/api/auth/slow"), String.class));
     }
 
 
