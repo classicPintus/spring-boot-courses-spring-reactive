@@ -5,6 +5,7 @@ import com.codeway.adapter.persistence.configuration.PersistenceConfiguration;
 import com.codeway.adapter.persistence.document.PostDocument;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,16 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {MongoConfig.class, PersistenceConfiguration.class})
 @ActiveProfiles({"test"})
-public class PostDocumentRepositoryITTest {
+public class PostDocumentRepositoryIT {
 
     @Autowired
     private MongoRepository<PostDocument, String> postDocumentRepository;
+
+
+    @Before
+    public void setup(){
+        System.out.println("######## TESTING - PERSISTENCE - #######");
+    }
 
     @Test
     public void shouldFindAllValues() {

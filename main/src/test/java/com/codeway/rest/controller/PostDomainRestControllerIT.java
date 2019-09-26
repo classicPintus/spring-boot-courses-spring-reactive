@@ -3,10 +3,9 @@ package com.codeway.rest.controller;
 import com.codeway.adapter.persistence.exception.DocumentNotFoundException;
 import com.codeway.domain.PostDomain;
 import com.codeway.domain.port.PostPersistencePort;
-import com.codeway.rest.controller.PostRestControllerImpl;
 import com.codeway.rest.mapper.PostMapper;
 import com.codeway.rest.model.PostModel;
-import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
@@ -26,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(PostRestControllerImpl.class)
-public class PostDomainRestControllerITTest {
+public class PostDomainRestControllerIT {
 
     @Autowired
     private MockMvc mvc;
@@ -34,6 +33,12 @@ public class PostDomainRestControllerITTest {
     private PostPersistencePort postPersistencePort;
     @MockBean
     private PostMapper postMapper;
+
+
+    @Before
+    public void setup(){
+        System.out.println("######## TESTING - REST - #######");
+    }
 
     @Test
     public void shouldReturnPost() throws Exception {
